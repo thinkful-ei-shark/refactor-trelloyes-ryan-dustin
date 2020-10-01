@@ -58,7 +58,44 @@ omit(obj, keyToOmit) {
         allCards: newAllCards,
     });
   }
+  newRandomCard = () => {
+    const id = Math.random().toString(36).substring(2, 4)
+      + Math.random().toString(36).substring(2, 4);
+    return {
+      id,
+      title: `Random Card ${id}`,
+      content: 'lorem ipsum',
+    }
+  } 
 
+
+
+  onAdd = (id) => {
+
+    console.log('the add button has ran');
+    const newCard = this.newRandomCard()
+    console.log(newCard, "new card is")
+    const newLists = this.state.lists.map((list) => {if(id === list.id ){
+      return {
+        id: list.id,
+        header: list.header,
+        cardIds: [...list.cardIds,newCard.id]
+      }
+    }else{
+      return list}
+    
+    } )
+    // (return {...list,cardIds:[...list.cardIds,newCard.id]}))
+    this.setState({
+      lists: newLists,
+      allCards: {...this.state.allCards,[newCard.id]:newCard}
+    })
+
+
+    
+   
+    };
+  
 
   render() {
     const store = this.state;
@@ -74,7 +111,9 @@ omit(obj, keyToOmit) {
               key={list.id}
               header={list.header}
               onDelete = {this.onDelete}
+              onAdd = {this.onAdd}
               cards={list.cardIds.map(id => store.allCards[id])}
+              listIndex={list.id}
             />
           ))}
         </div>
